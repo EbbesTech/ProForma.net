@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build ProForma",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/app-shell/ProForma/ProForma.csproj"
+      ],
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

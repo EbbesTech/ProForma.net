@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>    
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ProForma.Shared\ProForma.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Photino.NET" Version="4.0.16" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <PluginOutputDir>$(ProjectDir)..\..\ProForma\plugins\$(AssemblyName)</PluginOutputDir>
+  </PropertyGroup>
+  
+  <Target Name="CopyBuildOutput" AfterTargets="Build">
+    <ItemGroup>
+      <FilesToCopy Include="$(TargetDir)**\*" />
+    </ItemGroup>
+
+    <Copy
+        SourceFiles="@(FilesToCopy)"
+        DestinationFiles="@(FilesToCopy->'$(PluginOutputDir)\%(RecursiveDir)%(Filename)%(Extension)')"
+        SkipUnchangedFiles="true" />
+  </Target>
+</Project>

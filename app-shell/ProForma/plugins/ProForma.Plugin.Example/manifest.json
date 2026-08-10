@@ -1,0 +1,11 @@
+{
+    "id": "proforma-cs-example-plugin-stv1dbp1",
+    "name": "ProForma CS example Plugin",
+    "version": "0.0.1",
+    "type": "cs",
+    "description": "Plugin for development and testing purpose.",
+    "author": "Marlene Pielicke",
+    "homepage": "https://github.com/EbbesTech/ProForma.net",
+    "git": "https://github.com/EbbesTech/ProForma.net",
+    "entryFile": "ProForma.Plugin.Example.dll"
+}

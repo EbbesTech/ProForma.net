@@ -1,3 +1,8 @@
 <Solution>
+  <Folder Name="/Plugins/">
+    <Project Path="plugins/ProForma.Plugin.Example/ProForma.Plugin.Example.csproj" />
+  </Folder>
+  <Project Path="ProForma.Common/ProForma.Common.csproj" />
+  <Project Path="ProForma.Shared/ProForma.Shared.csproj" />
   <Project Path="ProForma/ProForma.csproj" />
 </Solution>
