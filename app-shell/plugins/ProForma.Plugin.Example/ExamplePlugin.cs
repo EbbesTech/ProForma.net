@@ -21,7 +21,7 @@ public class ExamplePlugin(ILogger<ExamplePlugin> _logger) : IPlugin
     public void ConfigurePlugin(IServiceProvider serviceProvider, ref ServiceCollection serviceCollection)
     {
         _logger.LogDebug($"Call {nameof(ExamplePlugin)}.{nameof(ConfigurePlugin)}.");
-        serviceCollection.AddKeyedSingleton<IWindowCustomSchemeHandler, ExampleSchemeHandler>(nameof(ExampleSchemeHandler));
+        serviceCollection.AddSingleton<IWindowCustomSchemeHandler, ExampleSchemeHandler>();
         serviceCollection.AddKeyedSingleton<IWindowWebMessageReceivedHandler, ExampleWebMessageReceivedHandler>(nameof(ExampleSchemeHandler));
     }
 }

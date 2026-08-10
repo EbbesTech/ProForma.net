@@ -7,5 +7,5 @@
     "author": "Marlene Pielicke",
     "homepage": "https://github.com/EbbesTech/ProForma.net",
     "git": "https://github.com/EbbesTech/ProForma.net",
-    "entryFile": "ProForma.Plugin.Test.dll"
+    "entryFile": "ProForma.Plugin.Example.dll"
 }
