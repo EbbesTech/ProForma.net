@@ -224,3 +224,5 @@ package-lock.json
 /lib/
 
 wwwroot/
+
+ProForma/plugins/
