@@ -1,0 +1,5 @@
+{
+    "scanFolders": ["./plugins"],
+    "pluginIndexUrls": ["https://github.com/EbbesTech/ProForma.net.marektplace"],
+    "installedPlugins":[]
+}

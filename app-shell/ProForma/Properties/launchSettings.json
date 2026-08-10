@@ -1,8 +1,13 @@
 {
   "profiles": {
-    "HelloPhotino.StaticFileServer": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "ProForma Debug": {
       "commandName": "Project",
-      "nativeDebugging": true
+      "nativeDebugging": true,
+      "jsWebView2Debugging": false
     }
   }
 }

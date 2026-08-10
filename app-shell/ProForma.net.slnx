@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="ProForma.Common/ProForma.Common.csproj" />
+  <Project Path="ProForma.Shared/ProForma.Shared.csproj" />
   <Project Path="ProForma/ProForma.csproj" />
 </Solution>

@@ -1,0 +1,39 @@
+{
+  "name": "ProForma.net",
+  "version": "1.0.0",
+  "description": "Monorepo for ProForma.net",
+  "scripts": {
+    "dev": "pnpm --filter @proforma/app dev",
+    "build:web": "pnpm --filter @proforma/app build",
+    "build:dotnet": "dotnet build app-shell/Proforma/Proforma.csproj",
+    "build": "pnpm build:web && pnpm build:dotnet",
+    "watch:web": "pnpm --filter @proforma/app dev",
+    "watch:dotnet": "dotnet watch --project app-shell/Proforma/Proforma.csproj",
+    "watch": "concurrently -k -n WEB,DOTNET \"pnpm watch:web\" \"pnpm watch:dotnet\""
+  },
+  "keywords": [
+    "react",
+    "vite",
+    "typescript",
+    "monorepo",
+    "pnpm",
+    "Photino",
+    ".net",
+    "ProForma",
+    "C#",
+    "CS"
+  ],
+  "author": "Marlene Pielicke",
+  "license": "MIT",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.18.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "concurrently": "^10.0.4"
+  }
+}
