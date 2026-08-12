@@ -9,7 +9,11 @@ using System.Text.Json.Serialization;
 
 namespace ProForma.Common.Plugins;
 
-public class PluginManagerService(ILogger<PluginManagerService> _logger, IServiceProvider _serviceProvider, IPluginConfigurationService _pluginConfigurations, JsonSerializerOptions _jsonSerializerOptions) : IPluginManagerService
+public class PluginManagerService(
+    ILogger<PluginManagerService> _logger, 
+    IServiceProvider _serviceProvider, 
+    IPluginConfigurationService _pluginConfigurations, 
+    JsonSerializerOptions _jsonSerializerOptions) : IPluginManagerService
 {
     public IEnumerable<IPlugin> GetAllPlugins()
     {
@@ -67,6 +71,7 @@ public class PluginManagerService(ILogger<PluginManagerService> _logger, IServic
                 _pluginConfigurations.Install(plugin);
             else
                 _pluginConfigurations.Update(plugin);
+            _pluginConfigurations.Save();
         });
     }
 
@@ -104,9 +109,18 @@ public class PluginManagerService(ILogger<PluginManagerService> _logger, IServic
 
     public IPlugin? CreatePluginInstance(PluginConfigurationItem configItem, IServiceCollection serviceCollection)
     {
+        _logger.LogDebug($"Call {nameof(PluginManagerService)}.{nameof(CreatePluginInstance)}.");
         var createInstanceService = _serviceProvider.GetRequiredKeyedService<IPluginInstanceFactory>(configItem.Type);
         if (createInstanceService is not null)
             return createInstanceService.CreateInstance(configItem, serviceCollection);
         return null;
+    }
+
+    public IEnumerable<IPlugin> FilterPlugins(Func<PluginConfigurationItem, bool> filter)
+    {
+        _logger.LogDebug($"Call {nameof(PluginManagerService)}.{nameof(FilterPlugins)}.");            
+        return _pluginConfigurations.GetAll()
+            .Where(filter)
+            .Select(plugin => plugin.PluginInstance) as IEnumerable<IPlugin> ?? [];
     }
 }

@@ -11,6 +11,8 @@ using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using Serilog;
 using System.ComponentModel;
+using ProForma.Common.Guard;
+using System.Data;
 
 namespace ProForma.Common.FileServer;
 
@@ -42,9 +44,9 @@ public class FileServerBuilder(ILogger<FileServerBuilder> _logger) : IFileServer
     public IFileServerBuilder AddDirectory(string urlPrefix, string physicalPath)
     {
         _logger.LogDebug($"Call {nameof(FileServerBuilder)}.{nameof(AddDirectory)}.");
-        if (!Directory.Exists(physicalPath)) throw new DirectoryNotFoundException($"Could not find the given path '{physicalPath}'.");
-        if (_directories.ContainsKey(urlPrefix)) throw new Exception($"Key '{urlPrefix}' already exists.");
-        if (_directories.ContainsValue(physicalPath)) throw new Exception($"Physical Path '{physicalPath}' already exists.");
+        Guard<DirectoryNotFoundException>.IsFalse(Directory.Exists(physicalPath)).Throw($"Could not find the given path '{physicalPath}'.");
+        Guard<DuplicateNameException>.IsTrue(_directories.ContainsKey(urlPrefix)).Throw($"Key '{urlPrefix}' already exists.");
+        Guard<Exception>.IsTrue(_directories.ContainsValue(physicalPath)).Throw($"Physical Path '{physicalPath}' already exists.");
 
         _directories.Add(urlPrefix, physicalPath);
         return this;
@@ -60,8 +62,9 @@ public class FileServerBuilder(ILogger<FileServerBuilder> _logger) : IFileServer
     public IFileServerBuilder AddPort(int startPort, int portRange)
     {
         _logger.LogDebug($"Call {nameof(FileServerBuilder)}.{nameof(AddPort)}.");
-        if (Convert.ToInt32(ushort.MaxValue) < startPort + portRange) 
-            throw new ArgumentOutOfRangeException($"The given range of {portRange} plus the start port of {startPort} exceeds the maximum range of {ushort.MaxValue}");
+        Guard<ArgumentOutOfRangeException>.IsLessThanOrEqualTo(startPort + portRange, ushort.MaxValue)
+            .Throw($"The given range of {portRange} plus the start port of {startPort} exceeds the maximum range of {ushort.MaxValue}");
+
         _startPort = startPort;
         _portRage = portRange;
         return this;

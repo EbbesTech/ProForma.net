@@ -9,6 +9,8 @@ public interface IPluginManagerService
 
     IEnumerable<IPlugin> GetAllPlugins();
 
+    IEnumerable<IPlugin> FilterPlugins(Func<PluginConfigurationItem, bool> filter);
+
     void LookForUpdates();
     void UpdatePlugin(string id);
 }

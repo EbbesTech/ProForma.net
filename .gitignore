@@ -226,3 +226,6 @@ package-lock.json
 wwwroot/
 
 */ProForma/plugins/**/*
+
+doc/.obsidian/
+doc/Untitled.base

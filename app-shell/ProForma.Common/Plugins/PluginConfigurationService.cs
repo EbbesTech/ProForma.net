@@ -1,9 +1,12 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using ProForma.Common.Guard;
+using ProForma.Shared.Plugins;
+
 using System.Data;
 using System.Runtime.Serialization;
 using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using ProForma.Shared.Plugins;
 
 namespace ProForma.Common.Plugins;
 
@@ -23,18 +26,19 @@ public class PluginConfigurationService : IPluginConfigurationService
     public void AddIndexUrl(string newIndexUrl)
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(AddIndexUrl)}.");
-        if (_configuration.PluginIndexUrls.Contains(newIndexUrl))
-            throw new DuplicateNameException($"There exists a index url with the value '{newIndexUrl}'.");
+        Guard<DuplicateNameException>.IsTrue(_configuration.PluginIndexUrls.Contains(newIndexUrl))
+            .Throw($"There exists a index url with the value '{newIndexUrl}'.");
         _configuration.PluginIndexUrls.Add(newIndexUrl);
     }
 
     public void AddScanFolder(string newScanFolder)
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(AddScanFolder)}.");
-        if (_configuration.ScanFolders.Contains(newScanFolder))
-            throw new DuplicateNameException($"There exists a scan folder path to '{newScanFolder}'.");
-        if (!Directory.Exists(newScanFolder))
-            throw new DirectoryNotFoundException($"Could not find scan folder '{newScanFolder}'.");
+
+        Guard<DuplicateNameException>.IsTrue(_configuration.ScanFolders.Contains(newScanFolder))
+            .Throw($"There exists a scan folder path to '{newScanFolder}'.");
+        Guard<DuplicateNameException>.IsFalse(Directory.Exists(newScanFolder))
+            .Throw($"Could not find scan folder '{newScanFolder}'.");
         _configuration.ScanFolders.Add(newScanFolder);
     }
 
@@ -73,16 +77,16 @@ public class PluginConfigurationService : IPluginConfigurationService
     public void Install(PluginConfigurationItem newPlugin)
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(Install)}.");
-        if (_configuration.InstalledPlugins.Any(ip => ip.Id!.Equals(newPlugin.Id)))
-            throw new DuplicateNameException("There is a plugin with the same id 'newPlugin.Id'.");
+        Guard<DuplicateNameException>.IsTrue(_configuration.InstalledPlugins.Any(ip => ip.Id!.Equals(newPlugin.Id)))
+            .Throw($"There is a plugin with the same id '{newPlugin.Id}'.");
         _configuration.InstalledPlugins.Add(newPlugin);
     }
 
     public void Load()
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(Load)}.");
-        if (!File.Exists(_configurationFilename))
-            throw new FileNotFoundException($"Configuration file '{_configurationFilename}' not found.");
+        Guard<FileNotFoundException>.IsFalse(File.Exists(_configurationFilename))
+            .Throw($"Configuration file '{_configurationFilename}' not found.");
         var fileContent = File.ReadAllText(_configurationFilename);
         _configuration = JsonSerializer.Deserialize<PluginConfiguration>(fileContent) ?? throw new SerializationException($"The content of the file '{_configurationFilename}' serialized to null, content: '{fileContent}'");
     }
@@ -90,16 +94,16 @@ public class PluginConfigurationService : IPluginConfigurationService
     public void RemoveIndexUrl(string removeIndexUrl)
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(RemoveIndexUrl)}.");
-        if (!_configuration.PluginIndexUrls.Contains(removeIndexUrl))
-            throw new KeyNotFoundException($"No index url '{removeIndexUrl}' known.");
+        Guard<KeyNotFoundException>.IsFalse(_configuration.PluginIndexUrls.Contains(removeIndexUrl))
+            .Throw($"No index url '{removeIndexUrl}' known.");
         _configuration.PluginIndexUrls.Remove(removeIndexUrl);
     }
 
     public void RemoveScanFolder(string removeScanFolder)
     {
         _logger.LogDebug($"Call {nameof(PluginConfigurationService)}.{nameof(RemoveScanFolder)}.");
-        if (!_configuration.ScanFolders.Contains(removeScanFolder))
-            throw new KeyNotFoundException($"No path '{removeScanFolder}' known.");
+        Guard<KeyNotFoundException>.IsFalse(_configuration.ScanFolders.Contains(removeScanFolder))
+            .Throw($"No path '{removeScanFolder}' known.");
         _configuration.ScanFolders.Remove(removeScanFolder);
     }
 

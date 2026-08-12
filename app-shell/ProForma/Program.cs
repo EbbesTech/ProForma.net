@@ -8,8 +8,10 @@ using Photino.NET.Server;
 
 using ProForma.Common.Extensions;
 using ProForma.Common.FileServer;
+using ProForma.Common.Guard;
 using ProForma.Common.Plugins;
 using ProForma.Shared.FileServer;
+using ProForma.Shared.Guard;
 using ProForma.Shared.Handlers;
 using ProForma.Shared.Plugins;
 using ProForma.Shared.Plugins.Extensions;
@@ -43,7 +45,6 @@ internal class Program
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(initConfiguration)
             .CreateLogger();
-
 
         var cts = new CancellationTokenSource();
         try
