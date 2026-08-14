@@ -2,14 +2,14 @@ Hello I'm Marlene and I invite you to follow my journey developing ProForma.net.
 But since this is my first post about ProForma, I will give you an overview of what I'm 
 trying to achieve. 
 
-# What ProForma.net is planned to be
+## What ProForma.net is planned to be
 The main Goal is to develop an application shell for schema based Applications. 
 You will have mainly to different types of UI schemes, first for the Window Layout, there you will tell which elements are contained in the different application sections, like what Buttons or Menus you will have in the window title bar, or what sidebar tabs you will provide for the Ribbons, what the content area is filled with (spoiler I'm going to use flexlayout-react https://github.com/caplin/FlexLayout). As host application I will write a C# application using the WebView2 abstraction library Photino (https://www.tryphotino.io/). 
 
-# What you can expect 
+## What you can expect 
 In this dev diary series I'll show what I was working on, I'll show you some code and will explain why did to choose the way I did it, or will share some thoughts about the project or the architecture. I also will show you how to write plugins for ProForma, because I plan to handle everything as a plugin so you can change the most aspects of the app. 
 
-# The journey begins: overcome the guard
+## The journey begins: overcome the guard
 Ok, most of you will know it... parameter checking on top of a method... nearly endless 'if throw' constructs... they are ugly...   
 ```CS
 if (!Directory.Exists(physicalPath)) throw new DirectoryNotFoundException($"Could not find the given path '{physicalPath}'.");
@@ -21,7 +21,8 @@ if (!Directory.Exists(physicalPath)) throw new DirectoryNotFoundException($"Coul
 I mean who wants to read that?
 I don't. So I wanted guards, and I've could used some 3rd Party library, but instead I came up with my own solution for the Guards, since I don't always want to throw the exception on a failed assert, I split the guard in two parts, the guard who does the check and a guard result which contains the check result and a `Throw(string? message)`. 
 
-First the ```IGuardResult<T>``` it's the result the guard will produce. I thought, I don't want to throw an exception just because the assertion failed, so I came to the following interface: 
+First the `IGuardResult<T>` it's the result the guard will produce. I thought, I don't want to throw an exception just because the assertion failed, so I came to the following interface:
+ 
 ```CS
 namespace ProForma.Shared.Guard;
 
@@ -33,9 +34,9 @@ public interface IGuardResult<T>
     void Throw(string? message = null);
 }
 ```
-As you see, we have a property `HasFailed` which is used to check the result if you don't want to throw an exception. If you want to throw just call the Throw with an optional message. And as you see the class is generic the ```T``` has to be of an exception type. 
+As you see, we have a property `HasFailed` which is used to check the result if you don't want to throw an exception. If you want to throw just call the Throw with an optional message. And as you see the class is generic the `T` has to be of an exception type. 
 
-The implementation is found in ```GuardResult<T>``` nothing too special here, just perhaps how I create the exception object of ```T``` with the ```Activator.CreateInstance```:
+The implementation is found in `GuardResult<T>` nothing too special here, just perhaps how I create the exception object of `T` with the `Activator.CreateInstance`:
 ```CS
 using ProForma.Shared.Guard;
 
@@ -203,7 +204,7 @@ public class Guard<T> : IGuard<T>
     }
 }
 ```
-Now you remember the ``if``'s from before? Here is how they rewrite with the `Guard<T>`, not really shorter, but in opinion much more readable. 
+Now you remember the `if`'s from before? Here is how they rewrite with the `Guard<T>`, not really shorter, but in opinion much more readable. 
 ```CS
 Guard<DirectoryNotFoundException>.IsFalse(Directory.Exists(physicalPath))
     .Throw($"Could not find the given path '{physicalPath}'.");
